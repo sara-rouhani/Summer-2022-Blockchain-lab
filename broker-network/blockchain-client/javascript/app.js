@@ -79,7 +79,7 @@ app.post('/queryTopic', async function (req, res) {
     
     let {topicNumber} = req.body;
 
-    const result = await contract.evaluateTransaction('queryTopic', topicNumber);
+    let result = await contract.evaluateTransaction('queryTopic', topicNumber);
     res.status(200).json(JSON.parse(result.toString()));
 
   }
@@ -97,8 +97,8 @@ app.post('/createTopic', async function (req, res) {
 
     let {topicNumber, topicName, publisher, subscribers, message} = req.body;
 
-    await contract.submitTransaction('createTopic', topicNumber, topicName, publisher, subscribers, message);
-    res.status(200).send('Transaction has been submitted')
+    let result = await contract.submitTransaction('createTopic', topicNumber, topicName, publisher, subscribers, message);
+    res.status(200).json(JSON.parse(result.toString()));
 
   }
   catch (error) {
@@ -115,8 +115,8 @@ app.post('/publishToTopic', async function (req, res) {
 
     let {topicNumber, message: newMessage} = req.body;
 
-    await contract.submitTransaction('publishToTopic', topicNumber, newMessage);
-    res.status(200).send('Transaction has been submitted')
+    let result = await contract.submitTransaction('publishToTopic', topicNumber, newMessage);
+    res.status(200).json(JSON.parse(result.toString()));
 
   }
   catch (error) {

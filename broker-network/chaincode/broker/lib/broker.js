@@ -9,9 +9,8 @@ class Broker extends Contract {
       console.info('============= START : Initialize Query Topic ===========');
       const topicAsBytes = await ctx.stub.getState(topicNumber); // get the topic from chaincode state
       if (!topicAsBytes || topicAsBytes.length === 0) {
-          throw new Error(`${topicNumber} does not exist`);
+          return {Message: `${topicNumber} does not exist`};
       }
-      console.log(topicAsBytes.toString());
       console.info('============= END : Initialize Query Topic ===========');
       return topicAsBytes.toString();
   }
@@ -22,7 +21,7 @@ class Broker extends Contract {
 
       const topicAsBytes = await ctx.stub.getState(topicNumber); // get the topic from chaincode state
       if (topicAsBytes && topicAsBytes.length !== 0) {
-          throw new Error(`${topicNumber} already exist`);
+          return {Message: `${topicNumber} already exist`};
       }
 
       let subscribersArr = subscribers.split(',');
@@ -36,6 +35,7 @@ class Broker extends Contract {
       
       await ctx.stub.putState(topicNumber, Buffer.from(JSON.stringify(topic)));
       console.info('============= END : Create Topic ===========');
+      return {Message: `${topicNumber} is created`};
   }
 
   // Publish to a topic by updating the message and notifying all subscribers.
@@ -44,7 +44,7 @@ class Broker extends Contract {
 
     const topicAsBytes = await ctx.stub.getState(topicNumber); // get the topic from chaincode state
     if (!topicAsBytes || topicAsBytes.length === 0) {
-        throw new Error(`${topicNumber} does not exist`);
+        return {Message: `${topicNumber} does not exist`};
     }
     const topic = JSON.parse(topicAsBytes.toString());
     topic.message = newMessage;
@@ -52,6 +52,7 @@ class Broker extends Contract {
     await ctx.stub.putState(topicNumber, Buffer.from(JSON.stringify(topic))); // update topic message on ledger
     
     console.info('============= END : Publish to a Topic ===========');
+    return {Message: `${topicNumber} is updated`};
   }
 
   // Query all topics from the ledger.
@@ -73,7 +74,7 @@ class Broker extends Contract {
       }
       console.info(allResults);
       console.info('============= END : Initialize Query All Topics ===========');
-      return JSON.stringify(allResults);
+      return allResults;
   }
 }
 
