@@ -1,0 +1,1 @@
+cmd_Release/indynodejs.node := ln -f "Release/obj.target/indynodejs.node" "Release/indynodejs.node" 2>/dev/null || (rm -rf "Release/indynodejs.node" && cp -af "Release/obj.target/indynodejs.node" "Release/indynodejs.node")
