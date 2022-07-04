@@ -11,7 +11,6 @@ import { buildCCPOrg1, buildWallet } from '../../../admin-user-creator/AppUtil';
 import { BrokerAgent } from './BrokerAgent';
 import { Client } from 'fabric-common';
 import { greenText, Output } from './OutputClass';
-import e from 'cors';
 
 const channelName = 'mychannel';
 const chaincodeName = 'broker';
@@ -40,12 +39,6 @@ let setUp = async function () {
   await registerAndEnrollUser(caClient, wallet, mspOrg, orgUserId, 'org1.department1');
 
   brokerAgent = await BrokerAgent.build()
-  let allRecords = await brokerAgent.agent.credentials.getAll()
-  // allRecords.forEach(async element => {
-  //   console.log(element.createdAt)
-  //  console.log(element.credentialAttributes)
-  // });
-  // console.log(await brokerAgent.agent.credentials.getAll())
 }
 
 let connect = async function (req: any, res: any, next: any) {
@@ -91,43 +84,7 @@ app.use(connect)
 app.post('/connectToAgent', async function (req, res) {
   try {
     let { invitation_url, publicDid } = req.body
-    let result = undefined, outputMessage, status, connectionRecordId
-    // if (publicDid in connectedAgent) {
-    //   connectionRecordId = connectedAgent[publicDid as keyof string]
-    //   await brokerAgent.agent.connections.getById(connectionRecordId)
-    //   brokerAgent.connectionRecordClientId = connectionRecordId
-    //   let proofResult = await brokerAgent.sendProofRequest("id")
-    //   proofResult.assertConnection(connectionRecordId)
-    //   if (proofResult.isVerified) {
-    //     status = 200
-    //     outputMessage = Output.ConnectionEstablished
-    //   }
-    //   else {
-    //     status = 400
-    //     outputMessage = "Agent was not verified"
-    //   }
-    // }
-    // else {
-    //   await brokerAgent.acceptConnection(invitation_url)
-    //   brokerAgent.sendMessage("New connection! , issuing credentials...")
-    //   let isAccepted = await brokerAgent.issueCredential()
-    //   if (isAccepted) {
-    //     status = 200
-    //     outputMessage = Output.ConnectionEstablished + " and Credentials issued!"
-    //   }
-    //   else {
-    //     status = 400
-    //     outputMessage = "please accept credentials"
-    //   }
-    //   connectedAgent[publicDid] = brokerAgent.connectionRecordClientId
-    //   // Object.assign(connectedAgent,{publicDid:brokerAgent.connectionRecordClientId})
-    //   // console.log(await brokerAgent.agent.connections.getAll())
-    // }
-    // console.log(outputMessage)
-    // brokerAgent.connectionRecordClientId = undefined
-    // console.log(await brokerAgent.agent.credentials.getAll())
-    // let resBody = {outputMessage, connectionRecordId}
-    // res.status(status).json(resBody)
+    let outputMessage, status
 
     await brokerAgent.acceptConnection(invitation_url)
     let proofResult = await brokerAgent.sendProofRequest("id")
@@ -163,6 +120,8 @@ app.post('/connectToAgent', async function (req, res) {
   }
 })
 
+
+//removes all the credentials from ledger
 
 app.get('/clearAll', async function (req, res) {
 

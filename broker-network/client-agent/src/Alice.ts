@@ -9,7 +9,6 @@ import {
 import { ConnectionEventTypes } from '@aries-framework/core'
 
 import { BaseAgent } from './BaseAgent'
-import { runFaber } from './FaberInquirer'
 import { greenText, Output, redText } from './OutputClass'
 
 export class Alice extends BaseAgent {
@@ -44,14 +43,6 @@ export class Alice extends BaseAgent {
   private async printConnectionInvite() {
     const outOfBand = await this.agent.oob.createInvitation()
     this.outOfBandId = outOfBand.id
-
-
-    // console.log(
-    //   Output.ConnectionLink,
-    //   outOfBand.outOfBandInvitation.toUrl({ domain: `http://localhost:${this.port}` }),
-    //   '\n'
-    // )
-
     return outOfBand.outOfBandInvitation.toUrl({ domain: `http://localhost:${this.port}` })
   }
 

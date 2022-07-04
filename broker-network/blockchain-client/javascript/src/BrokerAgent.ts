@@ -1,4 +1,4 @@
-import { AttributeValue, ConnectionEventTypes, ConnectionRecord, ConnectionStateChangedEvent, CredentialEventTypes, CredentialExchangeRecord, CredentialState, CredentialStateChangedEvent, ProofEventTypes, ProofIdentifier, ProofRecord, ProofState, ProofStateChangedEvent, V1CredentialService, V2CredentialPreview, V2CredentialService } from '@aries-framework/core'
+import { ConnectionRecord,  CredentialEventTypes, CredentialExchangeRecord, CredentialState, CredentialStateChangedEvent, ProofEventTypes, ProofIdentifier, ProofRecord, ProofState, ProofStateChangedEvent, V1CredentialService, V2CredentialPreview, V2CredentialService } from '@aries-framework/core'
 import type { CredDef, Schema } from 'indy-sdk'
 
 import { V1CredentialPreview, AttributeFilter, ProofAttributeInfo, utils } from '@aries-framework/core'
@@ -79,9 +79,7 @@ export class BrokerAgent extends BaseAgent {
   private getCredentialPreview(newTopic?: string) {
     let currId,currTopics
     if(this.currentCredRecord?.credentialAttributes && newTopic){
-      // console.log("working")
       currId = this.currentCredRecord.credentialAttributes[0].value
-      // currName =  this.currentCredRecord.credentialAttributes[1].value
       if(this.currentCredRecord.credentialAttributes[1].value !== "")
       currTopics = this.currentCredRecord.credentialAttributes[1].value+", "+newTopic
       else
@@ -89,14 +87,12 @@ export class BrokerAgent extends BaseAgent {
     }
     else{
       currId = utils.uuid()
-      // currName = 'Publisher 1'
       currTopics = ''
     }
   
   const credentialPreview = V1CredentialPreview.fromRecord({
     
     id: currId,
-    // name: currName,
     topics: currTopics
   })
     return credentialPreview
@@ -129,9 +125,7 @@ export class BrokerAgent extends BaseAgent {
   }
 
   private async newProofAttribute(attributeName : string) {
-    // let currTopics
-    // if(this.currentCredRecord?.credentialAttributes)
-    // currTopics = this.currentCredRecord?.credentialAttributes[1].value
+  
     await this.printProofFlow(greenText(`Creating new proof attribute for `+attributeName+` ...\n`))
     const proofAttribute = {
       attribute: new ProofAttributeInfo({
@@ -139,7 +133,6 @@ export class BrokerAgent extends BaseAgent {
         restrictions: [
           new AttributeFilter({
             credentialDefinitionId: this.credentialDefinition?.id,
-            // attributeValue: this.currentCredRecord?new AttributeValue({name: "topics",value: currTopics?currTopics: ""}):undefined
           }),
         ],
       }),
@@ -189,14 +182,6 @@ export class BrokerAgent extends BaseAgent {
         clearTimeout(timeoutId)
         resolve(e.payload.credentialRecord)
       })
-
-      // Also retrieve the connection record by invitation if the event has already fired
-      // void this.agent.connections.findAllByOutOfBandId(outOfBandId).then(([connectionRecord]) => {
-      //   if (connectionRecord) {
-      //     clearTimeout(timeoutId)
-      //     resolve(connectionRecord)
-      //   }
-      // })
       
     })
 

@@ -27,7 +27,7 @@ enum PromptOptions {
   QuerAllTopics = 'Query all topics',
   SendMessage = 'Send message',
   Exit = 'Exit',
-  Restart = 'Restart',
+  Restart = 'clear all credentials from ledger',
 }
 
 export class AliceInquirer extends BaseInquirer {
@@ -43,13 +43,6 @@ export class AliceInquirer extends BaseInquirer {
 
   public static async build(): Promise<AliceInquirer> {
     const alice = await Alice.build()
-
-    // let allRecords = await alice.agent.credentials.getAll()
-    // allRecords.forEach(async element => {
-    //   console.log(element.createdAt)
-    //  console.log(element.credentialAttributes)
-    // });
-    // console.log(await alice.agent.credentials.getAll())
     return new AliceInquirer(alice)
   }
 
@@ -112,12 +105,6 @@ export class AliceInquirer extends BaseInquirer {
 
 
   public async acceptCredentialOffer(credentialRecord: CredentialExchangeRecord) {
-    // const confirm = await inquirer.prompt([this.inquireConfirmation(Title.CredentialOfferTitle)])
-    // if (confirm.options === ConfirmOptions.No) {
-    //   await this.alice.agent.credentials.declineOffer(credentialRecord.id)
-    // } else if (confirm.options === ConfirmOptions.Yes) {
-    //   await this.alice.acceptCredentialOffer(credentialRecord)
-    // }
     await this.alice.acceptCredentialOffer(credentialRecord)
   }
 
@@ -158,9 +145,6 @@ export class AliceInquirer extends BaseInquirer {
       console.log(greenText(data))
     } else
       console.log(redText(data))
-
-    // console.log(await this.alice.getConnectionRecord())
-    // console.log(await this.alice.agent.credentials.getAll())
   }
 
 
@@ -238,12 +222,6 @@ export class AliceInquirer extends BaseInquirer {
   }
 
   public async acceptProofRequest(proofRecord: ProofRecord) {
-    // const confirm = await inquirer.prompt([this.inquireConfirmation(Title.ProofRequestTitle)])
-    // if (confirm.options === ConfirmOptions.No) {
-    //   await this.alice.agent.proofs.declineRequest(proofRecord.id)
-    // } else if (confirm.options === ConfirmOptions.Yes) {
-    //   await this.alice.acceptProofRequest(proofRecord)
-    // }
     console.log(purpleText("Getting verified"))
     await this.alice.acceptProofRequest(proofRecord)
   }
@@ -253,7 +231,6 @@ export class AliceInquirer extends BaseInquirer {
     this.listener.proofRequestListener(this.alice, this)
     this.listener.credentialOfferListener(this.alice, this)
     await this.sendInvitation(invitation)
-    // await this.alice.waitForConnection()
   }
 
 

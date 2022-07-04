@@ -1,5 +1,5 @@
-import type { PubAgent } from './PubAgent'
-import type { BrokerAgent } from './BrokerAgent'
+import type { Alice } from './Alice'
+import type { AliceInquirer } from './AliceInquirer'
 import type {
   Agent,
   BasicMessageStateChangedEvent,
@@ -8,6 +8,7 @@ import type {
   ProofRecord,
   ProofStateChangedEvent,
 } from '@aries-framework/core'
+import type BottomBar from 'inquirer/lib/ui/bottom-bar'
 
 import {
   BasicMessageEventTypes,
@@ -17,14 +18,17 @@ import {
   ProofEventTypes,
   ProofState,
 } from '@aries-framework/core'
+import { ui } from 'inquirer'
 
 import { Color, purpleText } from './OutputClass'
 
 export class Listener {
   public on: boolean
+  private ui: BottomBar
 
   public constructor() {
     this.on = false
+    this.ui = new ui.BottomBar()
   }
 
   private turnListenerOn() {
@@ -45,16 +49,19 @@ export class Listener {
     }
   }
 
-  private async newCredentialPrompt(credentialRecord: CredentialExchangeRecord) {
+  private async newCredentialPrompt(credentialRecord: CredentialExchangeRecord, aliceInquirer: AliceInquirer) {
     this.printCredentialAttributes(credentialRecord)
-    }
+    this.turnListenerOn()
+    await aliceInquirer.acceptCredentialOffer(credentialRecord)
+    this.turnListenerOff()
+  }
 
-  public credentialOfferListener(pubAgent: PubAgent) {
-    pubAgent.agent.events.on(
+  public credentialOfferListener(alice: Alice, aliceInquirer: AliceInquirer) {
+    alice.agent.events.on(
       CredentialEventTypes.CredentialStateChanged,
       async ({ payload }: CredentialStateChangedEvent) => {
         if (payload.credentialRecord.state === CredentialState.OfferReceived) {
-          await this.newCredentialPrompt(payload.credentialRecord)
+          await this.newCredentialPrompt(payload.credentialRecord, aliceInquirer)
         }
       }
     )
@@ -63,30 +70,23 @@ export class Listener {
   public messageListener(agent: Agent, name: string) {
     agent.events.on(BasicMessageEventTypes.BasicMessageStateChanged, async (event: BasicMessageStateChangedEvent) => {
       if (event.payload.basicMessageRecord.role === BasicMessageRole.Receiver) {
+        this.ui.updateBottomBar(purpleText(`message: ${event.payload.message.content}\n`))
       }
     })
   }
 
-  private async newProofRequestPrompt(proofRecord: ProofRecord) {
-    
+  private async newProofRequestPrompt(proofRecord: ProofRecord, aliceInquirer: AliceInquirer) {
+    this.turnListenerOn()
+    await aliceInquirer.acceptProofRequest(proofRecord)
+    this.turnListenerOff()
   }
 
-  public proofRequestListener(pubAgent: PubAgent) {
-    pubAgent.agent.events.on(ProofEventTypes.ProofStateChanged, async ({ payload }: ProofStateChangedEvent) => {
-      if (payload.proofRecord.state === ProofState.RequestReceived) {
-        await this.newProofRequestPrompt(payload.proofRecord)
+  public proofRequestListener(alice: Alice, aliceInquirer: AliceInquirer) {
+    alice.agent.events.on(ProofEventTypes.ProofStateChanged, async ({ payload }: ProofStateChangedEvent) => {
+      if (payload.proofRecord.state === ProofState.RequestReceived  && payload.proofRecord.connectionId === (await alice.getConnectionRecord()).id) {
+        await this.newProofRequestPrompt(payload.proofRecord, aliceInquirer)
       }
     })
   }
 
-  public proofAcceptedListener(brokerAgent: BrokerAgent) {
-    brokerAgent.agent.events.on(ProofEventTypes.ProofStateChanged, async ({ payload }: ProofStateChangedEvent) => {
-      if (payload.proofRecord.state === ProofState.Done) {
-        
-      }
-    })
-  }
-
-  public async newAcceptedPrompt(title: string) {
-  }
 }
