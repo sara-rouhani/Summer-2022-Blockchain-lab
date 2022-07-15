@@ -26,7 +26,7 @@ export class BaseAgent {
         id: name,
         key: name,
       },
-      publicDidSeed: '6b8b882e2618fa5d45ee7229ca880057',
+      publicDidSeed: '6b8b882e2618fa5d45ee7229ca880083',
       indyLedgers: [
         {
           genesisTransactions: bcovrin,

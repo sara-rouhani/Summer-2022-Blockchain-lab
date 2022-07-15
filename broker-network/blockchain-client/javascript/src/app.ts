@@ -1,5 +1,3 @@
-'use strict';
-
 import express, { json, query, urlencoded } from 'express';
 import cors from 'cors';
 
@@ -15,7 +13,7 @@ import { greenText, Output } from './OutputClass';
 const channelName = 'mychannel';
 const chaincodeName = 'broker';
 const mspOrg = 'Org1MSP';
-const walletPath = path.dirname('wallet');
+const walletPath = path.resolve(__dirname, '..', 'wallet');
 const orgUserId = 'appUser';
 let wallet: any, ccp: Client | Record<string, unknown>, caClient, contract: Contract, gateway: Gateway, brokerAgent: BrokerAgent;
 
@@ -38,7 +36,7 @@ let setUp = async function () {
   // and would be part of an administrative flow
   await registerAndEnrollUser(caClient, wallet, mspOrg, orgUserId, 'org1.department1');
 
-  brokerAgent = await BrokerAgent.build()
+  brokerAgent = await BrokerAgent.build();
 }
 
 let connect = async function (req: any, res: any, next: any) {
@@ -187,6 +185,7 @@ app.post('/createTopic', async function (req, res) {
       status = 400
       outputMessage = "Please first connect to the broker agent"
     }
+    console.log(brokerAgent.agent.connections.getAll());
     brokerAgent.connectionRecordClientId = undefined
     brokerAgent.currentCredRecord = undefined
     res.status(status).send(outputMessage)

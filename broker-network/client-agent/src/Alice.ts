@@ -51,8 +51,6 @@ export class Alice extends BaseAgent {
       throw new Error(redText(Output.MissingConnectionRecord))
     }
 
-
-
     const getConnectionRecord = (outOfBandId: string) =>
       new Promise<ConnectionRecord>((resolve, reject) => {
         // Timeout of 20 seconds

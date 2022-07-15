@@ -84,11 +84,10 @@ export class AliceInquirer extends BaseInquirer {
         break
       case PromptOptions.Restart:
         await this.clearAll()
-        return
+        break
     }
     await this.processAnswer()
   }
-
 
   public async getLatestCred() {
     let allRecords = await this.alice.agent.credentials.getAll()
@@ -103,12 +102,9 @@ export class AliceInquirer extends BaseInquirer {
     return currThreadId
   }
 
-
   public async acceptCredentialOffer(credentialRecord: CredentialExchangeRecord) {
     await this.alice.acceptCredentialOffer(credentialRecord)
   }
-
-
 
   public async clearAll() {
     let allRecords = await this.alice.agent.credentials.getAll()
@@ -129,7 +125,6 @@ export class AliceInquirer extends BaseInquirer {
     return { topicNumber, publisher, subscribers, message, topicName }
   }
 
-
   public async sendInvitation(invitation_url: String) {
     let publicDid = this.alice.agent.publicDid?.did
     const reqBody = { invitation_url, publicDid }
@@ -147,8 +142,6 @@ export class AliceInquirer extends BaseInquirer {
       console.log(redText(data))
   }
 
-
-
   public async createTopic() {
     let reqBody = await this.getTopicDetails()
     Object.assign(reqBody, { "clientDid": (await this.alice.getConnectionRecord()).did })
@@ -164,6 +157,8 @@ export class AliceInquirer extends BaseInquirer {
       console.log(greenText(data))
     } else
       console.log(redText(data))
+
+      console.log(await this.alice.agent.connections.getAll());
   }
 
   public async publishToTopic() {
@@ -232,29 +227,6 @@ export class AliceInquirer extends BaseInquirer {
     this.listener.credentialOfferListener(this.alice, this)
     await this.sendInvitation(invitation)
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   public async message() {
     const message = await this.inquireMessage()

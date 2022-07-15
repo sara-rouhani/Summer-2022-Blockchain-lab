@@ -52,7 +52,7 @@ export class BrokerAgent extends BaseAgent {
     console.log(`\n\nThe credential definition will look like this:\n`)
     console.log(purpleText(`Name: ${Color.Reset}${name}`))
     console.log(purpleText(`Version: ${Color.Reset}${version}`))
-    console.log(purpleText(`Attributes: ${Color.Reset}${attributes[0]}, ${attributes[1]}\n`))
+    console.log(purpleText(`Attributes: ${Color.Reset}${attributes[0]}, ${attributes[1]}, ${attributes[2]}\n`))
   }
 
   private async registerSchema() {
@@ -65,7 +65,6 @@ export class BrokerAgent extends BaseAgent {
     const schema = await this.agent.ledger.registerSchema(schemaTemplate)
     return schema
   }
-
 
   private async registerCredentialDefinition(schema: Schema) {
     this.credentialDefinition = await this.agent.ledger.registerCredentialDefinition({
