@@ -2,17 +2,26 @@
   "name": "javascript",
   "version": "1.0.0",
   "description": "",
-  "main": "invoke.js",
   "scripts": {
+    "start": "npx ts-node src/ClientInquirer.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@aries-framework/core": "^0.2.0",
+    "@aries-framework/node": "^0.2.0",
     "axios": "^0.27.2",
     "fabric-ca-client": "^2.2.13",
     "fabric-network": "^2.2.13",
-    "path": "^0.12.7"
+    "figlet": "^1.5.2",
+    "inquirer": "^8.2.4"
+  },
+  "devDependencies": {
+    "@types/figlet": "^1.5.4",
+    "@types/inquirer": "^8.2.1",
+    "ts-node": "^10.8.1",
+    "typescript": "^4.7.4"
   }
 }

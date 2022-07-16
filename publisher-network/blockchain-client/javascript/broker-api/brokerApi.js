@@ -1,6 +1,10 @@
 const axiosClient = require ('./axiosClient.js');
 
 let brokerApi = {
+  connectToAgent: ({invitationUrl}) => {
+    let url = '/connectToAgent';
+    return axiosClient.post(url, {invitationUrl});
+  },
   queryTopic: ({topicNumber}) => {
     let url = '/queryTopic';
     return axiosClient.post(url, {topicNumber});

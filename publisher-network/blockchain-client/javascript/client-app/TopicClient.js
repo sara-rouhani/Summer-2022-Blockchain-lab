@@ -8,8 +8,24 @@ class TopicClient {
   channelName = 'mychannel';
   chaincodeName = 'topic';
 
-  async initConnection(connectConfig) {
-    this.gateway = await connect(connectConfig);
+  static async build(connectConfig) {
+    const clientApi = new TopicClient();
+    clientApi.gateway = await connect(connectConfig);
+    return clientApi;
+  }
+
+  // async initConnection(connectConfig) {
+  //   this.gateway = await connect(connectConfig);
+  // }
+
+  async connectToAgent(args) {
+    try {
+      let res = await brokerApi.connectToAgent(args);
+      return res;
+    }
+    catch (err) {
+      console.log(err)
+    }
   }
 
   async createTopic(args) {
